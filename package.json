@@ -1,0 +1,19 @@
+{
+  "name": "urbanfarmer-pi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Will-Copeland/urbanfarmer-pi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Will-Copeland/urbanfarmer-pi/issues"
+  },
+  "homepage": "https://github.com/Will-Copeland/urbanfarmer-pi#readme"
+}
