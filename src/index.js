@@ -11,33 +11,26 @@ module.exports = admin.initializeApp({
 });
 
 function main() {
-  let tempArr = [];
-  let humArr = [];
+  let data = {};
   TEST((temp, humidity) => {
     const time = new Date().getTime();
-    tempArr.push({
-      time,
-      temp,
-    });
-    humArr.push({
-      time,
-      temp,
-    });
+    data[time] = { temp, humidity };
   });
 
 
   setInterval(() => {
     console.log('Sending update...');
-
+    const timeArr = Object.keys(data);
     firebase.firestore()
       .collection('test')
       .add({
         uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        temp: tempArr,
-        humidity: humArr,
+        first: timeArr[0],
+        last: timeArr[timeArr.length - 1],
+        nRecords: timeArr.length,
+        data,
       }).then((docId) => {
-        tempArr = [];
-        humArr = [];
+        data = {};
         console.log('UPDATED');
       })
       .catch((e) => {
