@@ -13,6 +13,6 @@ module.exports = (cb) => {
     const arr = str.split(' ');
     console.log(arr);
     
-    cb(temp, humidity);
+    // cb(temp, humidity);
   });
 };
