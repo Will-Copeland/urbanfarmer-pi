@@ -15,6 +15,7 @@ function main() {
   let humArr = [];
   TEST((temp, humidity) => {
     const time = new Date().getTime();
+    console.log('Tem, H, time in index: ', temp, humidity, time);
     tempArr.push({
       temp,
       time,

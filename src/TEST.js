@@ -11,6 +11,7 @@ module.exports = (cb) => {
     console.log('Node Log with data from python: ', data.toString());
     const str = data.toString();
     const [temp, humidity] = str.split(' ');
+    console.log('t, h in TEST: ', temp, humidity);
     cb(temp, humidity);
   });
 };
