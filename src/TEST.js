@@ -8,6 +8,8 @@ module.exports = () => {
   console.log('started!');
 
   process.stdout.on('data', (data) => {
+    console.log("data: ", data);
+    
     console.log('Node Log with data from python: ', data.toString());
     const str = data.toString();
     const [temp, humidity] = str.split(' ');
