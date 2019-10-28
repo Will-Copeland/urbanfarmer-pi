@@ -37,6 +37,7 @@ THE SOFTWARE.
 import grovepi
 import math
 import sys
+import time
 # Connect the Grove Temperature & Humidity Sensor Pro to digital port D4
 # This example uses the blue colored sensor.
 # SIG,NC,VCC,GND
@@ -49,6 +50,8 @@ white = 1   # The White colored sensor.
 
 while True:
     try:
+        # Read once every 60 seconds
+        time.sleep(60)
         # This example uses the blue colored sensor. 
         # The first parameter is the port, the second parameter is the type of sensor.
         [temp,humidity] = grovepi.dht(sensor,white)  
