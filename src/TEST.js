@@ -7,12 +7,15 @@ module.exports = (cb) => {
   const process = spawn('python', ['../Python/grove_dht_pro.py']);
   console.log('started!');
 
-  process.stdout.on('data', (data) => {    
+  process.stdout.on('data', (data) => {
     console.log('Data: ', data.toString());
     const str = data.toString();
     const arr = str.split(' ');
     console.log(arr);
-    
-    // cb(temp, humidity);
+    const [temp, humidity] = arr.map((data) => {
+      const Str = data.replace('\n', '');
+      return Str;
+    });
+    cb(temp, humidity);
   });
 };
