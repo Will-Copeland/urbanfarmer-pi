@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pip": "cd Python/ && pip install -r requirements.txt && python3 setup.py install"
+    "pip": "cd Python/ && pip install -r requirements.txt && python3 setup.py install",
+    "start": "./node_modules/.bin/babel src --out-dir lib && cd ./lib && node index.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,15 @@
   "bugs": {
     "url": "https://github.com/Will-Copeland/urbanfarmer-pi/issues"
   },
-  "homepage": "https://github.com/Will-Copeland/urbanfarmer-pi#readme"
+  "homepage": "https://github.com/Will-Copeland/urbanfarmer-pi#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "firebase-admin": "^8.6.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "babel-core": "^6.26.3"
+  }
 }

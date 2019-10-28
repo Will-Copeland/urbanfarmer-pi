@@ -1,4 +1,8 @@
-const TEST = require('./src/TEST');
+const TEST = require('./TEST');
+const initializeFirebase = require('./initializeFirebase');
+
+
+// It exists on the pi
 
 function main() {
   // code to run
@@ -9,6 +13,7 @@ function main() {
 
 function run() {
   setInterval(() => {}, 1 << 30);
+  initializeFirebase();
   main();
 }
 
