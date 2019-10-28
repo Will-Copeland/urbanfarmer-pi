@@ -25,20 +25,24 @@ function main() {
       time,
     });
   });
+
+  
   setInterval(() => {
-    firebase.firestore()
-      .collection('test')
-      .add({
-        uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        temp: tempArr,
-        humidity: humArr,
-      }).then((docId) => {
-        tempArr = [];
-        humArr = [];
-      })
-      .catch((e) => {
-        console.log('ERROR UPDATING FS: ', e);
-      });
+    console.log("Sending update...");
+    
+    // firebase.firestore()
+    //   .collection('test')
+    //   .add({
+    //     uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    //     temp: tempArr,
+    //     humidity: humArr,
+    //   }).then((docId) => {
+    //     tempArr = [];
+    //     humArr = [];
+    //   })
+    //   .catch((e) => {
+    //     console.log('ERROR UPDATING FS: ', e);
+    //   });
   }, 5000);
 }
 
