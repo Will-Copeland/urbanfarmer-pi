@@ -6,4 +6,7 @@ module.exports = () => {
   process.stdout.on('data', (data) => {
     console.log('Node Log with data from python: ', data.toString());
   });
+  process.stderr.on('data', (data) => {
+    console.log('Node STDERR with data from python: ', data.toString());
+  });
 };
