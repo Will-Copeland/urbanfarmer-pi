@@ -2,8 +2,8 @@ const TEST = require('./src/TEST');
 
 function main() {
   // code to run
+  TEST();
   setInterval(() => {
-    TEST();
   }, 1000);
 }
 
