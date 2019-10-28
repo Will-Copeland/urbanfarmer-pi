@@ -43,7 +43,6 @@ function main() {
 
 function run() {
   setInterval(() => {}, 1 << 30);
-  initializeFirebase();
   main();
 }
 
