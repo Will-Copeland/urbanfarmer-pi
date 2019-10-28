@@ -36,6 +36,7 @@ THE SOFTWARE.
 '''
 import grovepi
 import math
+import sys
 # Connect the Grove Temperature & Humidity Sensor Pro to digital port D4
 # This example uses the blue colored sensor.
 # SIG,NC,VCC,GND
