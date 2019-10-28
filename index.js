@@ -1,7 +1,9 @@
+const TEST = require('./src/TEST');
+
 function main() {
   // code to run
   setInterval(() => {
-    console.log('Polling sensors...');
+    TEST();
   }, 1000);
 }
 
