@@ -1,4 +1,4 @@
-import * as firebase from 'firebase-admin';
+// import * as firebase from 'firebase-admin';
 
 const admin = require('firebase-admin');
 const TEST = require('./TEST');
