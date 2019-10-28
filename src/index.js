@@ -36,7 +36,7 @@ function main() {
       .catch((e) => {
         console.log('ERROR UPDATING FS: ', e);
       });
-  }, 30000);
+  }, 300000);
 }
 
 function run() {
