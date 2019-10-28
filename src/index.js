@@ -1,14 +1,38 @@
+import * as firebase from 'firebase-admin';
+
 const TEST = require('./TEST');
 const initializeFirebase = require('./initializeFirebase');
 
 
-// It exists on the pi
-
 function main() {
-  // code to run
-  TEST();
+  let tempArr = [];
+  let humArr = [];
+  TEST((temp, humidity) => {
+    const time = new Date().getTime();
+    tempArr.push({
+      temp,
+      time,
+    });
+    humArr.push({
+      humidity,
+      time,
+    });
+  });
   setInterval(() => {
-  }, 1000);
+    firebase.firestore()
+      .collection('test')
+      .add({
+        uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        temp: tempArr,
+        humidity: humArr,
+      }).then((docId) => {
+        tempArr = [];
+        humArr = [];
+      })
+      .catch((e) => {
+        console.log('ERROR UPDATING FS: ', e);
+      });
+  }, 5000);
 }
 
 function run() {
