@@ -1,7 +1,7 @@
 
 const { spawn } = require('child_process');
 
-module.exports = () => {
+module.exports = (cb) => {
   console.log('Starting child process...');
 
   const process = spawn('python', ['../Python/grove_dht_pro.py']);
@@ -14,6 +14,6 @@ module.exports = () => {
     const str = data.toString();
     const [temp, humidity] = str.split(',');
     console.log('t, h in TEST: ', temp, humidity);
-    // cb(temp, humidity);
+    cb(temp, humidity);
   });
 };

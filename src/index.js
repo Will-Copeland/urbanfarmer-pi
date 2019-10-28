@@ -1,4 +1,4 @@
-// import * as firebase from 'firebase-admin';
+import * as firebase from 'firebase-admin';
 
 const admin = require('firebase-admin');
 const TEST = require('./TEST');
@@ -11,28 +11,39 @@ module.exports = admin.initializeApp({
 });
 
 function main() {
-  // let tempArr = [];
-  // let humArr = [];
-  TEST();
+  let tempArr = [];
+  let humArr = [];
+  TEST((temp, humidity) => {
+    const time = new Date().getTime();
+    tempArr.push({
+      time,
+      temp,
+    });
+    humArr.push({
+      time,
+      temp,
+    });
+  });
 
-  
-  // setInterval(() => {
-  //   console.log("Sending update...");
-    
-  //   // firebase.firestore()
-  //   //   .collection('test')
-  //   //   .add({
-  //   //     uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //   //     temp: tempArr,
-  //   //     humidity: humArr,
-  //   //   }).then((docId) => {
-  //   //     tempArr = [];
-  //   //     humArr = [];
-  //   //   })
-  //   //   .catch((e) => {
-  //   //     console.log('ERROR UPDATING FS: ', e);
-  //   //   });
-  // }, 5000);
+
+  setInterval(() => {
+    console.log('Sending update...');
+
+    firebase.firestore()
+      .collection('test')
+      .add({
+        uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        temp: tempArr,
+        humidity: humArr,
+      }).then((docId) => {
+        tempArr = [];
+        humArr = [];
+        console.log('UPDATED');
+      })
+      .catch((e) => {
+        console.log('ERROR UPDATING FS: ', e);
+      });
+  }, 30000);
 }
 
 function run() {
