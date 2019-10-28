@@ -10,7 +10,9 @@ module.exports = (cb) => {
   process.stdout.on('data', (data) => {    
     console.log('Data: ', data.toString());
     const str = data.toString();
-    const [temp, humidity] = str.split(',');
+    const arr = str.split(' ');
+    console.log(arr);
+    
     cb(temp, humidity);
   });
 };
