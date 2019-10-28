@@ -11,39 +11,28 @@ module.exports = admin.initializeApp({
 });
 
 function main() {
-  let tempArr = [];
-  let humArr = [];
-  TEST((temp, humidity) => {
-    const time = new Date().getTime();
-    console.log('Tem, H, time in index: ', temp, humidity, time);
-    tempArr.push({
-      temp,
-      time,
-    });
-    humArr.push({
-      humidity,
-      time,
-    });
-  });
+  // let tempArr = [];
+  // let humArr = [];
+  TEST();
 
   
-  setInterval(() => {
-    console.log("Sending update...");
+  // setInterval(() => {
+  //   console.log("Sending update...");
     
-    // firebase.firestore()
-    //   .collection('test')
-    //   .add({
-    //     uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    //     temp: tempArr,
-    //     humidity: humArr,
-    //   }).then((docId) => {
-    //     tempArr = [];
-    //     humArr = [];
-    //   })
-    //   .catch((e) => {
-    //     console.log('ERROR UPDATING FS: ', e);
-    //   });
-  }, 5000);
+  //   // firebase.firestore()
+  //   //   .collection('test')
+  //   //   .add({
+  //   //     uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+  //   //     temp: tempArr,
+  //   //     humidity: humArr,
+  //   //   }).then((docId) => {
+  //   //     tempArr = [];
+  //   //     humArr = [];
+  //   //   })
+  //   //   .catch((e) => {
+  //   //     console.log('ERROR UPDATING FS: ', e);
+  //   //   });
+  // }, 5000);
 }
 
 function run() {
