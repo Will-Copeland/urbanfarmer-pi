@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 module.exports = () => {
   console.log('Starting child process...');
 
-  const process = spawn('python', ['-u', './Python/grove_dht_pro.py']);
+  const process = spawn('python3', ['./Python/grove_dht_pro.py']);
   console.log('started!');
 
   process.stdout.on('data', (data) => {
