@@ -54,6 +54,8 @@ while True:
         [temp,humidity] = grovepi.dht(sensor,white)  
         if math.isnan(temp) == False and math.isnan(humidity) == False:
             print("temp = %.02f C humidity =%.02f%%"%(temp, humidity))
+            sys.stdout.flush()
+
 
     except IOError:
         print ("Error")
