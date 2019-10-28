@@ -15,6 +15,7 @@ function main() {
   TEST((temp, humidity) => {
     const time = new Date().getTime();
     data[time] = { temp, humidity };
+    console.log('dataObj: ', data);
   });
 
 
@@ -28,7 +29,7 @@ function main() {
         first: timeArr[0],
         last: timeArr[timeArr.length - 1],
         nRecords: timeArr.length,
-        data,
+        records: data,
       }).then((docId) => {
         data = {};
         console.log('UPDATED');
