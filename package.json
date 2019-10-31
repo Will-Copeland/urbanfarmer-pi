@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pip": "cd Python/ && pip install -r requirements.txt && python3 setup.py install",
-    "start": "./node_modules/.bin/babel src --out-dir lib && cd ./lib && node index.js"
+    "start": "./node_modules/.bin/babel src --out-dir lib && cd ./lib && node index.js",
+    "build": "./node_modules/.bin/babel src --out-dir lib && cd ./lib"
   },
   "repository": {
     "type": "git",
