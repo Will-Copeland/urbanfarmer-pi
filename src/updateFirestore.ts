@@ -8,19 +8,14 @@ class RecordKeeper {
   constructor() {
     this.docID = ''; // The document we're storing our records in for the day
     this.collection = ''; // And the collection
-
-    
-    
   }
-
 
 
   save() {
 
   }
 
-  
-  
+
   async _setCurrentDoc() {
     const isToday = await firebase
       .firestore()
@@ -54,10 +49,9 @@ class RecordKeeper {
 
 
   _init() {
+    fs.readdirSync(path.join(__dirname, '../data'));
 
-    fs.readdirSync(path.join(__dirname))
   }
-
 }
 firebase.firestore()
   .collection('test')
