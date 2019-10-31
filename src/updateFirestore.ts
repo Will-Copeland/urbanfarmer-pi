@@ -1,26 +1,29 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
-import * as firebase from 'firebase-admin';
-import fs from 'fs';
-import path from 'path';
+import * as firebase from "firebase-admin";
+import fs from "fs";
+import path from "path";
+
+export interface RecordKeeper {
+  docID: string;
+  collection:
+}
 
 class RecordKeeper {
   constructor() {
-    this.docID = ''; // The document we're storing our records in for the day
-    this.collection = ''; // And the collection
+    this.docID = ""; // The document we're storing our records in for the day
+    this.collection = ""; // And the collection
   }
 
-
-  save() {
+  public save() {
 
   }
 
-
-  async _setCurrentDoc() {
+  public async _setCurrentDoc() {
     const isToday = await firebase
       .firestore()
       .collection(this.collection)
-      .orderBy('createdAt', 'desc')
+      .orderBy("createdAt", "desc")
       .limit(1)
       .get()
       .then((resp) => {
@@ -40,21 +43,20 @@ class RecordKeeper {
     }
   }
 
-  _isToday(date) {
+  public _isToday(date) {
     const today = new Date();
     return date.getDate() === today.getDate()
       && date.getMonth() === today.getMonth()
       && date.getFullYear() === today.getFullYear();
   }
 
-
-  _init() {
-    fs.readdirSync(path.join(__dirname, '../data'));
+  public _init() {
+    fs.readdirSync(path.join(__dirname, "../data"));
 
   }
 }
 firebase.firestore()
-  .collection('test')
+  .collection("test")
   .add({
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -63,9 +65,9 @@ firebase.firestore()
     nRecords: timeArr.length,
     records: data,
   }).then((docId) => {
-    data = {};
-    console.log('UPDATED');
+    // data = {};
+    console.log("UPDATED");
   })
   .catch((e) => {
-    console.log('ERROR UPDATING FS: ', e);
+    console.log("ERROR UPDATING FS: ", e);
   });
