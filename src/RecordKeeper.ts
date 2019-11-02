@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 import * as firebase from "firebase-admin";
 import { ITempData } from "./models/TempData";
-import schedule from "node-schedule";
+import schedule, { RecurrenceRule } from "node-schedule";
 
 export type DataType = 'tempData'; // Add data types as the get used. Next will be "soilMoisture"
 
@@ -32,18 +32,10 @@ class RecordKeeper implements RecordKeeperProperties{
   constructor(collection: string) {
     this.init(collection);
     this.initSchedule(collection);
+    this.saveScheduler();
   }
 
-  
 
-  public _isToday(date: Date) {
-    const today = new Date();
-    return date.getDate() === today.getDate()
-      && date.getMonth() === today.getMonth()
-      && date.getFullYear() === today.getFullYear();
-  }
-
- 
   private async init(collection: string) {
     await firebase
       .firestore()
@@ -65,6 +57,13 @@ class RecordKeeper implements RecordKeeperProperties{
       })
   }
 
+  private saveScheduler() {
+    const everyFiveMinutes = new schedule.RecurrenceRule();
+    everyFiveMinutes.minute = new schedule.Range(0, 59, 5);
+    schedule.scheduleJob(everyFiveMinutes, () => {
+      this.save();
+    })
+  }
 
   public addData(dataType: DataType, data: any) {
     if (!this.firstTime) this.firstTime = new Date().getTime();
@@ -101,6 +100,14 @@ class RecordKeeper implements RecordKeeperProperties{
       this.docID = doc.id;
     });
   }
+
+  public _isToday(date: Date) {
+    const today = new Date();
+    return date.getDate() === today.getDate()
+      && date.getMonth() === today.getMonth()
+      && date.getFullYear() === today.getFullYear();
+  }
+
 
   private _setProperties(props: any, collection: string) {
     this.collection = collection;
