@@ -133,7 +133,6 @@ class RecordKeeper implements RecordKeeperProperties{
       this._newDoc(collection);
     });
   }
-
-
-
 }
+
+export default RecordKeeper;
