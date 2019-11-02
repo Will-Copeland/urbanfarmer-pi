@@ -1,21 +1,16 @@
 
 const { spawn } = require("child_process");
 
-module.exports = (cb: (temp: string, humidity: string) => void) => {
-  console.log("Starting child process...");
-
+module.exports = (cb: (temp: number, humidity: number) => void) => {
+  console.log("Starting temp logging!");
+  
   const process = spawn("python", ["../Python/grove_dht_pro.py"]);
-  console.log("started!");
-
   process.stdout.on("data", (data: Buffer) => {
-    console.log("Data: ", data.toString());
     const str = data.toString();
     const arr = str.split(" ");
-    console.log(arr);
     const [temp, humidity] = arr.map((data: any) => {
       const Str = data.replace("\n", "");
-
-      return Str;
+      return Str * 1;
     });
     cb(temp, humidity);
   });
