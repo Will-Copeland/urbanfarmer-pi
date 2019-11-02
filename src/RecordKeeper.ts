@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 import * as firebase from "firebase-admin";
 import { ITempData } from "./models/TempData";
-import schedule, { RecurrenceRule } from "node-schedule";
+import schedule from "node-schedule";
 
 export type DataType = 'tempData'; // Add data types as the get used. Next will be "soilMoisture"
 
