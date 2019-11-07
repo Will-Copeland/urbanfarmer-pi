@@ -62,14 +62,17 @@ class RecordKeeper implements IRecordKeeperProperties {
     await firebase
       .firestore()
       .collection(collection)
-      .orderBy("dateCreated", "desc")
+      .orderBy("createdAt", "desc")
       .limit(1)
       .get()
       .then((resp) => {
+        if (resp.empty) {
+          return this._newDoc(collection);
+        }
         resp.forEach((doc) => {
           const data = doc.data();
           data.id = doc.id;
-          const unix = data.dateCreated;
+          const unix = data.createdAt;
           if (this._isDocToday(unix)) {
             return this._setProperties(data, collection);
           } else {
@@ -89,22 +92,29 @@ class RecordKeeper implements IRecordKeeperProperties {
 
    private async _newDoc(collection: string) {
     const data = {
-      createdAt: new Date().getDate(),
+      collection,
+      createdAt: new Date().getTime(),
       recordDate: new Date().toDateString(),
       tempData: [],
     };
+
     await firebase.firestore()
     .collection(collection)
     .add(data)
     .then((doc) => {
-      this.docID = doc.id;
+        this.docID = doc.id;
+        this._setProperties(data, collection);
+
     });
   }
 
   private _setProperties(props: any, collection: string) {
-    this.collection = collection;
+    Object.keys(props).map((key) => {
+      (this as any)[key] = props[key];
+    });
+    // this.collection = collection;
     this.docID = props.id;
-    this.recordDate = props.recordDate;
+    // this.recordDate = props.recordDate;
   }
 
   private _todaysDate(): string {
