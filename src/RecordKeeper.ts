@@ -31,6 +31,8 @@ class RecordKeeper implements IRecordKeeperProperties {
   }
 
   public addData(dataType: DataType, data: any) {
+    console.log("data: ", data);
+
     this[dataType].push(data);
   }
 
@@ -86,7 +88,7 @@ class RecordKeeper implements IRecordKeeperProperties {
 
   private saveScheduler() {
     const everyFiveMinutes = new schedule.RecurrenceRule();
-    everyFiveMinutes.minute = new schedule.Range(0, 59, 5);
+    everyFiveMinutes.minute = new schedule.Range(0, 59, 1); 
     schedule.scheduleJob(everyFiveMinutes, () => {
       this.save();
     });
