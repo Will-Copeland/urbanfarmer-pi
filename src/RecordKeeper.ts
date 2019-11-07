@@ -42,6 +42,8 @@ class RecordKeeper implements IRecordKeeperProperties {
         noUndefined[key] = props[key];
       }
     });
+    console.log("saving, ", props);
+
     await firebase.firestore()
     .collection(this.collection)
     .doc(this.docID)
@@ -115,6 +117,9 @@ class RecordKeeper implements IRecordKeeperProperties {
     // this.collection = collection;
     this.docID = props.id;
     // this.recordDate = props.recordDate;
+
+    console.log("this: ", this);
+
   }
 
   private _todaysDate(): string {
