@@ -20,11 +20,7 @@ class RecordKeeper implements IRecordKeeperProperties {
 
   public static async init(collection: string) {
     const Class = new RecordKeeper();
-    console.log("Getting doc...");
-
     await Class._getDoc(collection);
-    console.log("Got doc");
-
     Class.initSchedule(collection);
     Class.saveScheduler();
 
@@ -39,8 +35,6 @@ class RecordKeeper implements IRecordKeeperProperties {
   public updatedAt: any;
 
   public addData(dataType: DataType, data: any) {
-    console.log("data: ", data);
-
     this[dataType].push(data);
   }
 
@@ -52,8 +46,6 @@ class RecordKeeper implements IRecordKeeperProperties {
         noUndefined[key] = props[key];
       }
     });
-    console.log("Doc ID: ", this.docID);
-
     await firebase.firestore()
     .collection(this.collection)
     .doc(this.docID)
@@ -94,14 +86,6 @@ class RecordKeeper implements IRecordKeeperProperties {
       });
   }
 
-  private saveScheduler() {
-    const everyFiveMinutes = new schedule.RecurrenceRule();
-    everyFiveMinutes.minute = new schedule.Range(0, 59, 1);
-    schedule.scheduleJob(everyFiveMinutes, () => {
-      this.save();
-    });
-  }
-
    private async _newDoc(collection: string) {
      const date = new Date();
      const data = {
@@ -110,21 +94,15 @@ class RecordKeeper implements IRecordKeeperProperties {
       recordDate: date.toDateString(),
       tempData: [],
     };
-
-     console.log("Setting new Doc");
-
      await firebase.firestore()
     .collection(collection)
     .add(data)
     .then((doc) => {
-      console.log("Doc ", doc.id, " made");
-
       this.docID = doc.id;
       this._setProperties(data, collection);
     })
     .catch((e) => {
       console.log("Doc creation failed ", e);
-
     });
   }
 
@@ -158,6 +136,14 @@ class RecordKeeper implements IRecordKeeperProperties {
     onNewDay.minute = 0;
     schedule.scheduleJob(onNewDay, () => {
       this._newDoc(collection);
+    });
+  }
+
+  private saveScheduler() {
+    const everyFiveMinutes = new schedule.RecurrenceRule();
+    everyFiveMinutes.minute = new schedule.Range(0, 59, 1);
+    schedule.scheduleJob(everyFiveMinutes, () => {
+      this.save();
     });
   }
 }
