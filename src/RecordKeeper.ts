@@ -88,7 +88,7 @@ class RecordKeeper implements IRecordKeeperProperties {
 
    private async _newDoc(collection: string) {
      const date = new Date();
-     const data = {
+     const data: any = {
       collection,
       createdAt: date.getTime(),
       recordDate: date.toDateString(),
@@ -98,7 +98,7 @@ class RecordKeeper implements IRecordKeeperProperties {
     .collection(collection)
     .add(data)
     .then((doc) => {
-      this.docID = doc.id;
+      data.id = doc.id;
       this._setProperties(data, collection);
     })
     .catch((e) => {
@@ -111,6 +111,7 @@ class RecordKeeper implements IRecordKeeperProperties {
       (this as any)[key] = props[key];
     });
     this.collection = collection;
+    this.docID = props.id;
     // this.recordDate = props.recordDate;
 
   }
