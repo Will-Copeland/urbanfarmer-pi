@@ -48,7 +48,7 @@ class RecordKeeper implements IRecordKeeperProperties {
         noUndefined[key] = props[key];
       }
     });
-    console.log("saving, ", props);
+    console.log("Doc ID: ", this.docID);
 
     await firebase.firestore()
     .collection(this.collection)
