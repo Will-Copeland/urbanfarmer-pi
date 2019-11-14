@@ -20,7 +20,11 @@ class RecordKeeper implements IRecordKeeperProperties {
 
   public static async init(collection: string) {
     const Class = new RecordKeeper();
+    console.log("Getting doc...");
+
     await Class._getDoc(collection);
+    console.log("Got doc");
+
     Class.initSchedule(collection);
     Class.saveScheduler();
 
@@ -99,14 +103,15 @@ class RecordKeeper implements IRecordKeeperProperties {
   }
 
    private async _newDoc(collection: string) {
-    const data = {
+     const date = new Date();
+     const data = {
       collection,
-      createdAt: new Date().getTime(),
-      recordDate: new Date().toDateString(),
+      createdAt: date.getTime(),
+      recordDate: date.toDateString(),
       tempData: [],
     };
 
-    await firebase.firestore()
+     await firebase.firestore()
     .collection(collection)
     .add(data)
     .then((doc) => {

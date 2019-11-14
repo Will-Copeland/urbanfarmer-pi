@@ -2,3 +2,4 @@ node_modules
 PythonHolding
 lib
 ADMIN_API_KEY.json
+*/*.pyc
