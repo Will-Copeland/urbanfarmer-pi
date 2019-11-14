@@ -140,9 +140,9 @@ class RecordKeeper implements IRecordKeeperProperties {
   }
 
   private saveScheduler() {
-    const everyFiveMinutes = new schedule.RecurrenceRule();
-    everyFiveMinutes.minute = new schedule.Range(0, 59, 1);
-    schedule.scheduleJob(everyFiveMinutes, () => {
+    const everyTenMinutes = new schedule.RecurrenceRule();
+    everyTenMinutes.minute = new schedule.Range(0, 59, 10);
+    schedule.scheduleJob(everyTenMinutes, () => {
       this.save();
     });
   }
