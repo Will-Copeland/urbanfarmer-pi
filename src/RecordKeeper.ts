@@ -111,12 +111,19 @@ class RecordKeeper implements IRecordKeeperProperties {
       tempData: [],
     };
 
+     console.log("Setting new Doc");
+
      await firebase.firestore()
     .collection(collection)
     .add(data)
     .then((doc) => {
-        this.docID = doc.id;
-        this._setProperties(data, collection);
+      console.log("Doc ", doc.id, " made");
+
+      this.docID = doc.id;
+      this._setProperties(data, collection);
+    })
+    .catch((e) => {
+      console.log("Doc creation failed ", e);
 
     });
   }
