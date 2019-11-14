@@ -133,7 +133,6 @@ class RecordKeeper implements IRecordKeeperProperties {
       (this as any)[key] = props[key];
     });
     this.collection = collection;
-    this.docID = props.id;
     // this.recordDate = props.recordDate;
 
   }
