@@ -17,18 +17,22 @@ export interface IRecordKeeperProperties {
 }
 
 class RecordKeeper implements IRecordKeeperProperties {
+
+  public static async init(collection: string) {
+    const Class = new RecordKeeper();
+    await Class._getDoc(collection);
+    Class.initSchedule(collection);
+    Class.saveScheduler();
+
+    Class.tempData = [];
+    return Class;
+    }
   public docID!: string;
   public collection!: string;
   public recordDate!: string;
   public createdAt!: number;
   public tempData!: ITempData[];
   public updatedAt: any;
-
-  constructor(collection: string) {
-    this.init(collection);
-    this.initSchedule(collection);
-    this.saveScheduler();
-  }
 
   public addData(dataType: DataType, data: any) {
     console.log("data: ", data);
@@ -62,7 +66,7 @@ class RecordKeeper implements IRecordKeeperProperties {
       && date.getFullYear() === today.getFullYear();
   }
 
-  private async init(collection: string) {
+  private async _getDoc(collection: string) {
     await firebase
       .firestore()
       .collection(collection)
@@ -88,7 +92,7 @@ class RecordKeeper implements IRecordKeeperProperties {
 
   private saveScheduler() {
     const everyFiveMinutes = new schedule.RecurrenceRule();
-    everyFiveMinutes.minute = new schedule.Range(0, 59, 1); 
+    everyFiveMinutes.minute = new schedule.Range(0, 59, 1);
     schedule.scheduleJob(everyFiveMinutes, () => {
       this.save();
     });
@@ -116,11 +120,9 @@ class RecordKeeper implements IRecordKeeperProperties {
     Object.keys(props).map((key) => {
       (this as any)[key] = props[key];
     });
-    // this.collection = collection;
+    this.collection = collection;
     this.docID = props.id;
     // this.recordDate = props.recordDate;
-
-    console.log("this: ", this);
 
   }
 

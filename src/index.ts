@@ -21,10 +21,10 @@ function main(Record: RecordKeeper) {
   });
 }
 
-function run() {
+async function run() {
   setInterval(() => {}, 1 << 30);
-  const Record = new RecordKeeper("test");
 
+  const Record = await RecordKeeper.init("test");
   main(Record);
 }
 
