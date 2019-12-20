@@ -3,7 +3,7 @@ const { spawn } = require("child_process");
 export default (cb: (temp: number, humidity: number) => void) => {
   console.log("Starting temp logging!");
 
-  const process = spawn("python", ["../Python/grove_dht_pro.py"]);
+  const process = spawn("python", ["../Python/readTemp.py"]);
   process.stdout.on("data", (data: Buffer) => {
     const str = data.toString();
     const arr = str.split(" ");
