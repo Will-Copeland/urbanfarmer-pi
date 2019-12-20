@@ -9,22 +9,22 @@ module.exports = admin.initializeApp({
   databaseURL: "https://urbanfarmer-c46e0.firebaseio.com",
 });
 
-function main(Record: RecordKeeper) {
+function main(record: RecordKeeper) {
   readTemp((temp: number, humidity: number) => {
    const data: ITempData = {
     humidity,
      temp,
      timeOfMeasurement: new Date().getTime(),
    };
-   Record.addData("tempData", data); // pushes "data" to tempData Array
+   record.addData("tempData", data); // pushes "data" to tempData Array
   });
 }
 
 async function run() {
   setInterval(() => {}, 1 << 30);
 
-  const Record = await RecordKeeper.init("test");
-  main(Record);
+  const record = await RecordKeeper.init("test");
+  main(record);
 }
 
 run();

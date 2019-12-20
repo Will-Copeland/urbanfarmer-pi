@@ -6,7 +6,7 @@ import { ITempData } from "./models/TempData";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
 
-export interface IRecordKeeperProperties {
+export interface RecordKeeperProperties {
   docID: string;
   collection: string;
   recordDate: string; // Date().toDateString();
@@ -16,7 +16,7 @@ export interface IRecordKeeperProperties {
 
 }
 
-class RecordKeeper implements IRecordKeeperProperties {
+class RecordKeeper implements RecordKeeperProperties {
 
   public static async init(collection: string) {
     const Class = new RecordKeeper();
@@ -74,11 +74,11 @@ class RecordKeeper implements IRecordKeeperProperties {
           return this._newDoc(collection);
         }
         resp.forEach((doc) => {
-          const data = doc.data();
-          data.id = doc.id;
-          const unix = data.createdAt;
+          const existingDoc = doc.data();
+          existingDoc.docID = doc.id;
+          const unix = existingDoc.createdAt;
           if (this._isDocToday(unix)) {
-            return this._setProperties(data, collection);
+            return this._setProperties(existingDoc as RecordKeeperProperties, collection);
           } else {
             return this._newDoc(collection);
           }
@@ -98,7 +98,7 @@ class RecordKeeper implements IRecordKeeperProperties {
     .collection(collection)
     .add(data)
     .then((doc) => {
-      data.id = doc.id;
+      data.docID = doc.id;
       this._setProperties(data, collection);
     })
     .catch((e) => {
@@ -106,13 +106,12 @@ class RecordKeeper implements IRecordKeeperProperties {
     });
   }
 
-  private _setProperties(props: any, collection: string) {
-    Object.keys(props).map((key) => {
-      (this as any)[key] = props[key];
-    });
+  private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {
     this.collection = collection;
-    this.docID = props.id;
-    // this.recordDate = props.recordDate;
+    this.docID = existingDoc.docID;
+    this.tempData = existingDoc.tempData;
+    this.createdAt = existingDoc.createdAt;
+    // this.recordDate = data.recordDate;
 
   }
 
