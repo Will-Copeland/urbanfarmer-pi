@@ -1,9 +1,8 @@
 import admin from "firebase-admin";
+import serviceAccount from "../ADMIN_API_KEY.json";
 import { ITempData } from "./models/TempData";
-const readTemp = require("./readTemp");
+import readTemp from "./readTemp";
 import RecordKeeper from "./RecordKeeper";
-// eslint-disable-next-line import/no-unresolved
-const serviceAccount = require("../ADMIN_API_KEY.json");
 
 module.exports = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
