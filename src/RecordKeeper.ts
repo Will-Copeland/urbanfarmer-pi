@@ -20,7 +20,6 @@ export interface RecordKeeperProperties {
 class RecordKeeper implements RecordKeeperProperties {
 
   public static async init(collection: string) {
-    genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
     const Class = new RecordKeeper();
     await Class._getDoc(collection);
     Class.initSchedule(collection);
@@ -108,8 +107,8 @@ class RecordKeeper implements RecordKeeperProperties {
       this._setProperties(data, collection);
     })
     .catch((e) => {
-      genericNotification("Doc creation failed!", ":rotating_light:");
       console.log("Doc creation failed ", e);
+      return genericNotification("Doc creation failed!", ":rotating_light:");
     });
   }
 

@@ -1,6 +1,7 @@
 import admin from "firebase-admin";
 import serviceAccount from "../ADMIN_API_KEY.json";
 import { ITempData } from "./models/TempData";
+import genericNotification from "./notifications/genericNotification";
 import readTemp from "./readTemp";
 import RecordKeeper from "./RecordKeeper";
 
@@ -22,6 +23,7 @@ function main(record: RecordKeeper) {
 
 async function run() {
   setInterval(() => {}, 1 << 30);
+  await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
 
   const record = await RecordKeeper.init("test");
   main(record);
