@@ -50,4 +50,4 @@ while True:
         data['ir'] = list(grovepi.ir_read_signal())
     val += 10
     print(json.dumps(data))
-    time.sleep(0.2)
+    time.sleep(900)
