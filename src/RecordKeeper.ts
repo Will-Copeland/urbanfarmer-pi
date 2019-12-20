@@ -3,6 +3,7 @@
 import * as firebase from "firebase-admin";
 import schedule from "node-schedule";
 import { ITempData } from "./models/TempData";
+import genericNotification from "./notifications/genericNotification";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
 
@@ -19,6 +20,7 @@ export interface RecordKeeperProperties {
 class RecordKeeper implements RecordKeeperProperties {
 
   public static async init(collection: string) {
+    genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
     const Class = new RecordKeeper();
     await Class._getDoc(collection);
     Class.initSchedule(collection);
@@ -78,8 +80,12 @@ class RecordKeeper implements RecordKeeperProperties {
           existingDoc.docID = doc.id;
           const unix = existingDoc.createdAt;
           if (this._isDocToday(unix)) {
+            console.log("Doc is today, setting props");
+
             return this._setProperties(existingDoc as RecordKeeperProperties, collection);
           } else {
+            console.log("Doc is not today. Creating new doc");
+
             return this._newDoc(collection);
           }
         });
@@ -102,6 +108,7 @@ class RecordKeeper implements RecordKeeperProperties {
       this._setProperties(data, collection);
     })
     .catch((e) => {
+      genericNotification("Doc creation failed!", ":rotating_light:");
       console.log("Doc creation failed ", e);
     });
   }
