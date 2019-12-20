@@ -50,14 +50,13 @@ white = 1   # The White colored sensor.
 
 while True:
     try:
-        # Read once every 60 seconds
         # This example uses the blue colored sensor. 
         # The first parameter is the port, the second parameter is the type of sensor.
         [temp,humidity] = grovepi.dht(sensor,white)  
         if math.isnan(temp) == False and math.isnan(humidity) == False:
             print temp,humidity;
             sys.stdout.flush()
-            time.sleep(60)
+            time.sleep(900) # In seconds, 900 = 15min
 
 
     except IOError:
