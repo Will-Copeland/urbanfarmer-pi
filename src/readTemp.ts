@@ -1,5 +1,3 @@
-import type { ITempData } from "./models/TempData";
-
 const { spawn } = require("child_process");
 
 export default (): Promise<{temp: number, humidity: number}> => {
