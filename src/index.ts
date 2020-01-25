@@ -11,22 +11,21 @@ module.exports = admin.initializeApp({
 });
 
 function main(record: RecordKeeper) {
-  readTemp((temp: number, humidity: number) => {
-   const data: ITempData = {
-    humidity,
-     temp,
-     timeOfMeasurement: new Date().getTime(),
-   };
-   record.addData("tempData", data); // pushes "data" to tempData Array
-  });
+  readTemp().then(tempData => {
+    const data: ITempData = {
+      ...tempData,
+      timeOfMeasurement: new Date().getTime(),
+    };
+    record.addData("tempData", data);
+  })
 }
 
 async function run() {
-  setInterval(() => {}, 1 << 30);
-  await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
-
-  const record = await RecordKeeper.init("test");
-  main(record);
+  while (true) {
+    await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
+    const record = await RecordKeeper.init("");
+    main(record);
+  }
 }
 
 run();
