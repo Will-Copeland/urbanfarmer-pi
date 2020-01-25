@@ -23,7 +23,7 @@ function main(record: RecordKeeper) {
 async function run() {
   while (true) {
     await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
-    const record = await RecordKeeper.init("");
+    const record = await RecordKeeper.init("tempData");
     main(record);
   }
 }
