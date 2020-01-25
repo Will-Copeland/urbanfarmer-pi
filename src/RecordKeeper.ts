@@ -102,8 +102,9 @@ class RecordKeeper implements RecordKeeperProperties {
      await firebase.firestore()
     .collection(collection)
     .add(data)
-    .then((doc) => {
+    .then(async (doc) => {
       data.docID = doc.id;
+      await genericNotification("New doc created!", ":new:")
       this._setProperties(data, collection);
     })
     .catch((e) => {
@@ -127,6 +128,7 @@ class RecordKeeper implements RecordKeeperProperties {
 
   private _isDocToday(docUnix: number) {
     const docDay = new Date(docUnix).toDateString();
+    
     return docDay === this._todaysDate();
   }
 
