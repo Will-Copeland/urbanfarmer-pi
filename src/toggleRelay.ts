@@ -16,20 +16,20 @@
 // }
 
 
-const { exec } = require("child_process");
+// const { exec } = require("child_process");
 
-export default (pin: number, state: 0 | 1) => {
-  return new Promise((resolve, reject) => {
-    exec(`python toggleRelay.py ${pin} ${state}`, { cwd: "../Python/"}, (err: object, stdout: string, stderr: string) => {
-      console.log("stdout: ", stdout, " ", typeof stdout);
-      console.log("err: ", err, " ", typeof err);
-      console.log("stderr: ", stderr, " ", typeof stderr);
+// export default (pin: number, state: 0 | 1) => {
+//   return new Promise((resolve, reject) => {
+//     exec(`python toggleRelay.py ${pin} ${state}`, { cwd: "../Python/"}, (err: object, stdout: string, stderr: string) => {
+//       console.log("stdout: ", stdout, " ", typeof stdout);
+//       console.log("err: ", err, " ", typeof err);
+//       console.log("stderr: ", stderr, " ", typeof stderr);
       
-      resolve();
-    })
-  })
+//       resolve();
+//     })
+//   })
 
-}
+// }
 
 
 // const { spawn } = require("child_process");
@@ -52,17 +52,17 @@ export default (pin: number, state: 0 | 1) => {
 // }
 
 
-// const { execFile } = require("child_process");
+const { execFile } = require("child_process");
 
-// export default (pin: number, state: 0 | 1) => {
-//   return new Promise((resolve, reject) => {
-//     execFile(`python toggleRelay.py ${pin} ${state}`, { cwd: "/home/pi/urbanfarmer-pi/Python/" }, (err: any, stdout: any, stderr: any) => {
-//       console.log("stdout: ", stdout, " ", typeof stdout);
-//       console.log("err: ", err, " ", typeof err);
-//       console.log("stderr: ", stderr, " ", typeof stderr);
+export default (pin: number, state: 0 | 1) => {
+  return new Promise((resolve, reject) => {
+    execFile(`toggleRelay.py`, [pin, state] { cwd: "/home/pi/urbanfarmer-pi/Python/" }, (err: any, stdout: any, stderr: any) => {
+      console.log("stdout: ", stdout, " ", typeof stdout);
+      console.log("err: ", err, " ", typeof err);
+      console.log("stderr: ", stderr, " ", typeof stderr);
       
-//       resolve();
-//     })
-//   })
+      resolve();
+    })
+  })
 
-// }
+}
