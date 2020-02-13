@@ -44,7 +44,7 @@ import grovepi
 
 # Connect the Grove SPDT Relay to digital port D4
 # SIG,NC,VCC,GND
-relay = 4
+relay = 3
 
 grovepi.pinMode(relay,"OUTPUT")
 

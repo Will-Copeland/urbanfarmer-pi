@@ -56,6 +56,10 @@ while True:
         print("success")
         sys.stdout.flush()
 
+    except KeyboardInterrupt:
+        grovepi.digitalWrite(relay,0)
+        break
+
     except IOError:
         print ("error")
         sys.stdout.flush()
