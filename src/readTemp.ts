@@ -12,6 +12,8 @@ export default (): Promise<{temp: number, humidity: number}> => {
         const Str = d.replace("\n", "");
         return Str * 1;
       });
+      console.log("New reading: ", temp, humidity);
+      
       resolve({temp, humidity});
     });
   })

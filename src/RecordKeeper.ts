@@ -36,6 +36,8 @@ class RecordKeeper implements RecordKeeperProperties {
   public updatedAt: any;
 
   public addData(dataType: DataType, data: any) {
+    console.log("adding data to local recordkeeper: ", data);
+    
     this[dataType].push(data);
   }
 
@@ -47,13 +49,17 @@ class RecordKeeper implements RecordKeeperProperties {
         noUndefined[key] = props[key];
       }
     });
+    console.log("Saving data... data: ", noUndefined);
     await firebase.firestore()
     .collection(this.collection)
     .doc(this.docID)
     .update({
       ...noUndefined,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    }).catch(e => {
+      console.error("Error saving data to doc ", this.docID);
+      
+    })
   }
 
   public _isToday(date: Date) {
@@ -148,9 +154,13 @@ class RecordKeeper implements RecordKeeperProperties {
   }
 
   private saveScheduler() {
+    console.log("init save scheduler");
+    
     const everyTenMinutes = new schedule.RecurrenceRule();
     everyTenMinutes.minute = new schedule.Range(0, 59, 10);
-    schedule.scheduleJob(everyTenMinutes, () => {
+    schedule.scheduleJob(everyTenMinutes, () => {      
+      console.log("running save cron job...");
+      
       this.save();
     });
   }
