@@ -16,6 +16,8 @@ function main(record: RecordKeeper) {
       ...tempData,
       timeOfMeasurement: new Date().getTime(),
     };
+    console.log("Prom fin: ", data);
+    
     record.addData("tempData", data);
   })
 }
