@@ -38,7 +38,7 @@ class RecordKeeper implements RecordKeeperProperties {
   public addData(dataType: DataType, data: any) {
     console.log("adding data to local recordkeeper: ", data);
     
-    this[dataType].push(data);
+    this[dataType] = this[dataType].concat(data);
   }
 
   public async save() {
