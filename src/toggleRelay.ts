@@ -36,12 +36,15 @@ const { spawn } = require("child_process");
 
 export default (pin: number, state: 0 | 1) => {
   return new Promise((resolve, reject) => {
+    console.log("running toggle");
+    
     let process;
     if (state === 0) {
        process = spawn("python", ["../Python/relayOff.py"]);
     } else if (state === 1) {
-      
-      process = spawn("python", );
+      process = spawn("python", ["../Python/relayOn.py"]);
+
+
       process.stdout.on("data", (data: string) => {
       console.log("stdout: ", data);
      

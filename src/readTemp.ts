@@ -5,9 +5,7 @@ import { spawn } from "child_process";
 export default (callback: (data: { temp: number, humidity: number }) => void) => {
   console.log("Starting temp logging!");
 
-  const process = spawn("python", ["../Python/readTemp.py"]);
-  console.log(process);
-  
+  const process = spawn("python", ["../Python/readTemp.py"]);  
   process.stdout.on("data", (data: Buffer) => {
     const str = data.toString();
     const arr = str.split(" ");
