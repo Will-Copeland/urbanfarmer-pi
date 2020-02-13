@@ -12,7 +12,7 @@ module.exports = admin.initializeApp({
 });
 
 function main(record: RecordKeeper) {
-  setInterval((record: RecordKeeper) => {
+  setInterval(() => {
   record.relayPowered = !record.relayPowered;
     toggleRelay(2, record.relayPowered ? 0 : 1)
   }, 10000)
