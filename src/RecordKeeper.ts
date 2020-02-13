@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 import * as firebase from "firebase-admin";
 import schedule from "node-schedule";
-import { ITempData } from "./models/TempData";
+import { TempData } from "./models/TempData";
 import genericNotification from "./notifications/genericNotification";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
@@ -13,8 +13,6 @@ export interface RecordKeeperProperties {
   recordDate: string; // Date().toDateString();
   createdAt: number; // unix
   updatedAt: any; // firestore.FieldValue.serverTimestamp()
-  tempData: ITempData[];
-
 }
 
 class RecordKeeper implements RecordKeeperProperties {
@@ -23,22 +21,31 @@ class RecordKeeper implements RecordKeeperProperties {
     const Class = new RecordKeeper();
     await Class._getDoc(collection);
     Class.initSchedule(collection);
-    Class.saveScheduler();
-
-    Class.tempData = [];
     return Class;
     }
+    
   public docID!: string;
   public collection!: string;
   public recordDate!: string;
   public createdAt!: number;
-  public tempData!: ITempData[];
+  public tempData!: TempData[];
   public updatedAt: any;
 
-  public addData(dataType: DataType, data: any) {
-    console.log("adding data to local recordkeeper: ", data);
+  public addData(data: TempData) {
+    return firebase.firestore()
+    .collection(this.collection)
+    .doc(this.docID)
+    .update({
+      tempData: firebase.firestore.FieldValue.arrayUnion(data),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }).catch(e => {
+      console.error("Error saving data to doc ", this.docID);
+    })
+    .then(() => {
+      console.log("Successfully updated");
+      
+    })
     
-    this[dataType] = this[dataType].concat(data);
   }
 
   public async save() {
@@ -60,13 +67,6 @@ class RecordKeeper implements RecordKeeperProperties {
       console.error("Error saving data to doc ", this.docID);
       
     })
-  }
-
-  public _isToday(date: Date) {
-    const today = new Date();
-    return date.getDate() === today.getDate()
-      && date.getMonth() === today.getMonth()
-      && date.getFullYear() === today.getFullYear();
   }
 
   private async _getDoc(collection: string) {
@@ -119,15 +119,10 @@ class RecordKeeper implements RecordKeeperProperties {
     });
   }
 
-  private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {
-    console.log("existing doc: ", existingDoc);
-    
+  private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {    
     this.collection = collection;
     this.docID = existingDoc.docID;
-    this.tempData = existingDoc.tempData;
     this.createdAt = existingDoc.createdAt;
-    console.log("THIS: ", this);
-    
   }
 
   private _todaysDate(): string {
@@ -152,18 +147,6 @@ class RecordKeeper implements RecordKeeperProperties {
     onNewDay.minute = 0;
     schedule.scheduleJob(onNewDay, () => {
       this._newDoc(collection);
-    });
-  }
-
-  private saveScheduler() {
-    console.log("init save scheduler");
-    
-    const everyTenMinutes = new schedule.RecurrenceRule();
-    everyTenMinutes.minute = new schedule.Range(0, 59, 1);
-    schedule.scheduleJob(everyTenMinutes, () => {      
-      console.log("running save cron job...");
-      
-      this.save();
     });
   }
 }

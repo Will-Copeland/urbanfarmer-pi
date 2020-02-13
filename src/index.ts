@@ -16,7 +16,7 @@ function main(record: RecordKeeper) {
       ...tempData,
       timeOfMeasurement: new Date().getTime(),
     };
-    record.addData("tempData", data);
+    record.addData(data);
   })
 }
 
