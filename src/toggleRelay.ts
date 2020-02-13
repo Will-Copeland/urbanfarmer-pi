@@ -32,37 +32,38 @@
 // }
 
 
-// const { spawn } = require("child_process");
-
-// export default (pin: number, state: 0 | 1) => {
-//   return new Promise((resolve, reject) => {
-//     const process = spawn("python", [pin, state], {cwd: "/home/pi/urbanfarmer-pi/Python"});
-//      process.stdout.on("data", (data: string) => {
-//     console.log("stdout: ", data);
-    
-      
-//       resolve();
-//     });
-//     process.stderr.on("data", (data: string) => {
-//       console.log("err ", data);
-//       reject()
-//     })
-//   })
-
-// }
-
-
-const { execFile } = require("child_process");
+const { spawn } = require("child_process");
 
 export default (pin: number, state: 0 | 1) => {
   return new Promise((resolve, reject) => {
-    execFile(`/home/pi/urbanfarmer-pi/Python/toggleRelay.py`, [pin, state], { cwd: "/home/pi/urbanfarmer-pi/Python/" }, (err: any, stdout: any, stderr: any) => {
-      console.log("stdout: ", stdout, " ", typeof stdout);
-      console.log("err: ", err, " ", typeof err);
-      console.log("stderr: ", stderr, " ", typeof stderr);
+    let process;
+    if (state === 0) {
+       process = spawn("python", ["../Python/relayOff.py"]);
+    } else if (state === 1) {
       
-      resolve();
-    })
+      process = spawn("python", );
+      process.stdout.on("data", (data: string) => {
+      console.log("stdout: ", data);
+     
+       
+       resolve();
+     });
+
+     process.stderr.on("data", (data: string) => {
+       console.log("err ", data);
+       reject()
+     })
+    }
+
   })
 
 }
+
+
+// const { execFile } = require("child_process");
+
+// export default (pin: number, state: 0 | 1) => {
+
+//   })
+
+// }
