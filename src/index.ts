@@ -12,15 +12,19 @@ module.exports = admin.initializeApp({
 });
 
 function main(record: RecordKeeper) {
+  setInterval((record: RecordKeeper) => {
+  record.relayPowered = !record.relayPowered;
+    toggleRelay(2, record.relayPowered ? 0 : 1)
+  }, 10000)
   readTemp((tempData) => {
     const data: TempData = {
       ...tempData,
       timeOfMeasurement: new Date().getTime(),
     };
-    record.addData(data);
+    // record.addData(data);
+
   })
-  record.relayPowered = !record.relayPowered;
-  toggleRelay(2, record.relayPowered ? 0 : 1)
+
 }
 
 async function run() {
