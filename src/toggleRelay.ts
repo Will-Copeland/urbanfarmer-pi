@@ -16,24 +16,40 @@
 // }
 
 
-const { spawn } = require("child_process");
+const { exec } = require("child_process");
 
 export default (pin: number, state: 0 | 1) => {
   return new Promise((resolve, reject) => {
-    const process = spawn("python", [pin, state], {cwd: "/home/pi/urbanfarmer-pi/Python"});
-     process.stdout.on("data", (data: string) => {
-    console.log("stdout: ", data);
-    
+    exec(`cd /home/pi/urbanfarmer-pi/Python && python toggleRelay.py ${pin} ${state}`, (err: object, stdout: string, stderr: string) => {
+      console.log("stdout: ", stdout, " ", typeof stdout);
+      console.log("err: ", err, " ", typeof err);
+      console.log("stderr: ", stderr, " ", typeof stderr);
       
       resolve();
-    });
-    process.stderr.on("data", (data: string) => {
-      console.log("err ", data);
-      reject()
     })
   })
 
 }
+
+
+// const { spawn } = require("child_process");
+
+// export default (pin: number, state: 0 | 1) => {
+//   return new Promise((resolve, reject) => {
+//     const process = spawn("python", [pin, state], {cwd: "/home/pi/urbanfarmer-pi/Python"});
+//      process.stdout.on("data", (data: string) => {
+//     console.log("stdout: ", data);
+    
+      
+//       resolve();
+//     });
+//     process.stderr.on("data", (data: string) => {
+//       console.log("err ", data);
+//       reject()
+//     })
+//   })
+
+// }
 
 
 // const { execFile } = require("child_process");
