@@ -120,12 +120,14 @@ class RecordKeeper implements RecordKeeperProperties {
   }
 
   private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {
+    console.log("existing doc: ", existingDoc);
+    
     this.collection = collection;
     this.docID = existingDoc.docID;
     this.tempData = existingDoc.tempData;
     this.createdAt = existingDoc.createdAt;
-    // this.recordDate = data.recordDate;
-
+    console.log("THIS: ", this);
+    
   }
 
   private _todaysDate(): string {
