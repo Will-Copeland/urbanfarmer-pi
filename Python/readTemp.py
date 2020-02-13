@@ -56,7 +56,7 @@ while True:
         if math.isnan(temp) == False and math.isnan(humidity) == False:
             print temp,humidity;
             sys.stdout.flush()
-            time.sleep(900) # In seconds, 900 = 15min
+            time.sleep(90) # In seconds, 900 = 15min
 
 
     except IOError:

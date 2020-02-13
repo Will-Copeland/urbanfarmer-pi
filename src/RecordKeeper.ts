@@ -157,7 +157,7 @@ class RecordKeeper implements RecordKeeperProperties {
     console.log("init save scheduler");
     
     const everyTenMinutes = new schedule.RecurrenceRule();
-    everyTenMinutes.minute = new schedule.Range(0, 59, 10);
+    everyTenMinutes.minute = new schedule.Range(0, 59, 1);
     schedule.scheduleJob(everyTenMinutes, () => {      
       console.log("running save cron job...");
       
