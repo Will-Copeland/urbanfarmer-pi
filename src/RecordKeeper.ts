@@ -13,6 +13,7 @@ export interface RecordKeeperProperties {
   recordDate: string; // Date().toDateString();
   createdAt: number; // unix
   updatedAt: any; // firestore.FieldValue.serverTimestamp()
+  relayPowered: boolean;
 }
 
 class RecordKeeper implements RecordKeeperProperties {
@@ -21,6 +22,7 @@ class RecordKeeper implements RecordKeeperProperties {
     const Class = new RecordKeeper();
     await Class._getDoc(collection);
     Class.initSchedule(collection);
+    Class.relayPowered = false;
     return Class;
     }
     
@@ -30,6 +32,7 @@ class RecordKeeper implements RecordKeeperProperties {
   public createdAt!: number;
   public tempData!: TempData[];
   public updatedAt: any;
+  public relayPowered!: boolean;
 
   public addData(data: TempData) {
     return firebase.firestore()
@@ -104,6 +107,7 @@ class RecordKeeper implements RecordKeeperProperties {
       createdAt: date.getTime(),
       recordDate: date.toDateString(),
       tempData: [],
+      relayPowered: 0,
     };
      await firebase.firestore()
     .collection(collection)
