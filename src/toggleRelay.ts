@@ -9,4 +9,5 @@ export default (state: 0 | 1) => {
     console.log(output);
     return;
   })
+  return;
 }

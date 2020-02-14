@@ -21,7 +21,7 @@ function main(record: RecordKeeper) {
     record.relayPowered = !record.relayPowered;
     console.log("toggling relay");
     
-    // toggleRelay(record.relayPowered ? 0 : 1)
+    toggleRelay(record.relayPowered ? 0 : 1)
   })
 
 }
