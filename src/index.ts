@@ -17,11 +17,7 @@ function main(record: RecordKeeper) {
       ...tempData,
       timeOfMeasurement: new Date().getTime(),
     };
-    record.addData(data);
-    record.relayPowered = !record.relayPowered;
-    console.log("toggling relay");
-    
-    toggleRelay(record.relayPowered ? 0 : 1)
+    record.onData(data);
   })
 
 }

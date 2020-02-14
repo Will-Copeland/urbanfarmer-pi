@@ -4,6 +4,7 @@ import * as firebase from "firebase-admin";
 import schedule from "node-schedule";
 import { TempData } from "./models/TempData";
 import genericNotification from "./notifications/genericNotification";
+import toggleRelay from "./toggleRelay";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
 
@@ -34,6 +35,26 @@ class RecordKeeper implements RecordKeeperProperties {
   public updatedAt: any;
   public relayPowered!: boolean;
 
+
+  public onData(data: TempData) {
+    if (data.humidity > 55 && !this.relayPowered) {
+      console.log("Hum over 55 and relay OFF! Turning on");
+      
+      toggleRelay(1)
+    } else if (data.humidity > 55 && this.relayPowered) {
+      console.log("Hum over 55 and relay ON. doing nothing");
+    } else if (data.humidity < 53 && this.relayPowered) {
+      console.log("Hum under 53 and relay ON, turning off");
+    } else if (data.humidity < 53 && !this.relayPowered) {
+      console.log("hum under 53 and relay off, doing nothing");
+      
+    }
+
+
+
+    this.addData(data);
+  }
+
   public addData(data: TempData) {
     console.log("adding");
     
@@ -50,7 +71,6 @@ class RecordKeeper implements RecordKeeperProperties {
       console.log("Successfully updated");
       
     })
-    
   }
 
   public async save() {
@@ -124,6 +144,8 @@ class RecordKeeper implements RecordKeeperProperties {
       return genericNotification("Doc creation failed!", ":rotating_light:");
     });
   }
+
+  
 
   private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {    
     this.collection = collection;
