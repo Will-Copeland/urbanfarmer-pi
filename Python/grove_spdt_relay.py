@@ -52,12 +52,12 @@ while True:
     try:
         # switch on for 5 seconds
         success = grovepi.digitalWrite(relay,1)
-        print ("on: ", success)
+        print ("on: ", grovepi.digitalRead(relay))
         time.sleep(5)
 
         # switch off for 5 seconds
         off = grovepi.digitalWrite(relay,0)
-        print ("off: ", off)
+        print ("off: ", grovepi.digitalRead(relay))
         time.sleep(5)
 
     except KeyboardInterrupt:
