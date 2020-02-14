@@ -48,18 +48,6 @@ import sys
 relay = 4
 grovepi.pinMode(relay,"OUTPUT")
 
-while True:
-    try:
-        grovepi.digitalWrite(relay,1)
-        print("success")
-        sys.stdout.flush()
-
-    except KeyboardInterrupt:
-        grovepi.digitalWrite(relay,0)
-        break
-
-    except IOError:
-        print ("error")
-        sys.stdout.flush()
-
-
+grovepi.digitalWrite(relay,1)
+print("success")
+sys.stdout.flush()
