@@ -4,6 +4,7 @@ import { TempData } from "./models/TempData";
 import genericNotification from "./notifications/genericNotification";
 import readTemp from "./readTemp";
 import RecordKeeper from "./RecordKeeper";
+import toggleRelay from "./toggleRelay";
 
 module.exports = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -17,6 +18,10 @@ function main(record: RecordKeeper) {
       timeOfMeasurement: new Date().getTime(),
     };
     record.addData(data);
+    record.relayPowered = !record.relayPowered;
+    console.log("toggling relay");
+    
+    toggleRelay(record.relayPowered ? 0 : 1)
   })
 
 }
@@ -25,6 +30,7 @@ async function run() {
   setInterval(() => { }, 1 << 50);
   await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
   const record = await RecordKeeper.init("test");
+  toggleRelay(0);
   main(record);
 }
 
