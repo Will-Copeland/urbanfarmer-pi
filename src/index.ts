@@ -18,11 +18,11 @@ function main(record: RecordKeeper) {
       timeOfMeasurement: new Date().getTime(),
     };
     record.addData(data);
-    // record.relayPowered = !record.relayPowered;
-    // toggleRelay(2, record.relayPowered ? 0 : 1).then(() => {
-    //   console.log("done");
+    record.relayPowered = !record.relayPowered;
+    toggleRelay(2, record.relayPowered ? 0 : 1).then(() => {
+      console.log("done");
       
-    // })
+    })
   })
 
 }
