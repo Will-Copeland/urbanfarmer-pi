@@ -30,8 +30,8 @@ async function run() {
   setInterval(() => { }, 1 << 50);
   await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
   const record = await RecordKeeper.init("test");
-  toggleRelay(0);
   main(record);
+  setImmediate(() => toggleRelay(0))
 }
 
 run();
