@@ -39,12 +39,14 @@ class RecordKeeper implements RecordKeeperProperties {
   public onData(data: TempData) {
     if (data.humidity > 55 && !this.relayPowered) {
       console.log("Hum over 55 and relay OFF! Turning on");
-      
+      this.relayPowered = true;
       toggleRelay(1)
     } else if (data.humidity > 55 && this.relayPowered) {
       console.log("Hum over 55 and relay ON. doing nothing");
     } else if (data.humidity < 53 && this.relayPowered) {
       console.log("Hum under 53 and relay ON, turning off");
+      this.relayPowered = false;
+      toggleRelay(0)
     } else if (data.humidity < 53 && !this.relayPowered) {
       console.log("hum under 53 and relay off, doing nothing");
       
