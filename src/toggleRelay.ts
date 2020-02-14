@@ -38,7 +38,7 @@ export default (pin: number, state: 0 | 1) => {
   return new Promise((resolve, reject) => {
     console.log("running toggle");
       
-      const process = spawn("python", ["../Python/relayOn.py"]);
+      const process = spawn("python", ["../Python/grove_spdt_relay.py"]);
 
 
       process.stdout.on("data", (data: string) => {
