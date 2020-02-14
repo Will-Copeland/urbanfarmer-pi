@@ -53,7 +53,7 @@ while True:
         grovepi.digitalWrite(relay,0)
         print("success")
         sys.stdout.flush()
-
+        break;
     except KeyboardInterrupt:
         grovepi.digitalWrite(relay,0)
         break

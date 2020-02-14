@@ -35,6 +35,8 @@ class RecordKeeper implements RecordKeeperProperties {
   public relayPowered!: boolean;
 
   public addData(data: TempData) {
+    console.log("adding");
+    
     return firebase.firestore()
     .collection(this.collection)
     .doc(this.docID)

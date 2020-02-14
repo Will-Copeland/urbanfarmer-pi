@@ -19,7 +19,9 @@ function main(record: RecordKeeper) {
     };
     record.addData(data);
     record.relayPowered = !record.relayPowered;
-    toggleRelay(record.relayPowered ? 0 : 1)
+    console.log("toggling relay");
+    
+    // toggleRelay(record.relayPowered ? 0 : 1)
   })
 
 }
