@@ -19,7 +19,7 @@ function main(record: RecordKeeper) {
     };
     record.addData(data);
     record.relayPowered = !record.relayPowered;
-    toggleRelay(2, record.relayPowered ? 0 : 1).then(() => {
+    toggleRelay(record.relayPowered ? 0 : 1).then(() => {
       console.log("done");
       
     })
