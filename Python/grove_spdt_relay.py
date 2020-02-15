@@ -51,13 +51,11 @@ grovepi.pinMode(relay,"OUTPUT")
 while True:
     try:
         # switch on for 5 seconds
-        success = grovepi.digitalWrite(relay,1)
-        print ("on: ", grovepi.digitalRead(relay))
+        grovepi.digitalWrite(relay,1)
         time.sleep(5)
 
         # switch off for 5 seconds
-        off = grovepi.digitalWrite(relay,0)
-        print ("off: ", grovepi.digitalRead(relay))
+        grovepi.digitalWrite(relay,0)
         time.sleep(5)
 
     except KeyboardInterrupt:
