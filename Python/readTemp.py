@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 #
-# GrovePi Example for using the Grove Temperature & Humidity Sensor Pro 
+# GrovePi Example for using the Grove Temperature & Humidity Sensor Pro
 # (http://www.seeedstudio.com/wiki/Grove_-_Temperature_and_Humidity_Sensor_Pro)
 #
-# The GrovePi connects the Raspberry Pi and Grove sensors.  
+# The GrovePi connects the Raspberry Pi and Grove sensors.
 # You can learn more about GrovePi here:  http://www.dexterindustries.com/GrovePi
 #
 # Have a question about this example?  Ask on the forums here:  http://forum.dexterindustries.com/c/grovepi
@@ -50,14 +50,13 @@ white = 1   # The White colored sensor.
 
 while True:
     try:
-        # This example uses the blue colored sensor. 
+        # This example uses the blue colored sensor.
         # The first parameter is the port, the second parameter is the type of sensor.
-        [temp,humidity] = grovepi.dht(sensor,white)  
+        [temp, humidity] = grovepi.dht(sensor, white)
         if math.isnan(temp) == False and math.isnan(humidity) == False:
-            print temp,humidity;
+            print temp, humidity
             sys.stdout.flush()
-            time.sleep(10) # In seconds, 900 = 15min
-
+            time.sleep(900)  # In seconds, 900 = 15min
 
     except IOError:
-        print ("Error")
+        print("Error")
