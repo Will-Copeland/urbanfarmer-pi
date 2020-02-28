@@ -18,6 +18,7 @@ export interface RecordKeeperProperties {
   relayPowered: boolean;
   humLowThreshold: number;
   humHighThreshold: number;
+  unsub: () => void;
 }
 
 class RecordKeeper implements RecordKeeperProperties {
@@ -28,7 +29,7 @@ class RecordKeeper implements RecordKeeperProperties {
     Class.initSchedule(collection);
     Class.relayPowered = false;
     toggleRelay(0);
-
+    Class.unsub = Class.subscribeToDoc();
     await Class.save();
     return Class;
   }
@@ -42,7 +43,7 @@ class RecordKeeper implements RecordKeeperProperties {
   public relayPowered!: boolean;
   public humHighThreshold!: number;
   public humLowThreshold!: number;
-
+  public unsub!: () => void;
 
   public onData(data: TempData) {
     if (data.humidity > this.humHighThreshold && !this.relayPowered) {
@@ -79,6 +80,19 @@ class RecordKeeper implements RecordKeeperProperties {
         console.log("Successfully updated");
 
       })
+  }
+
+  public subscribeToDoc() {
+    return firebase.firestore()
+      .collection(this.collection)
+      .doc(this.docID)
+      .onSnapshot(doc => {
+        if (!doc.exists || !doc.data()) {
+          return this._newDoc(this.collection)
+        }
+        this._setProperties(doc.data() as RecordKeeperProperties, this.collection)
+      })
+
   }
 
   public async save() {
