@@ -95,7 +95,7 @@ class RecordKeeper implements RecordKeeperProperties {
           return this._newDoc(this.collection)
         }
 
-        data.id = doc.id;
+        data.docID = doc.docID;
         this._setProperties(data as RecordKeeperProperties, this.collection)
       })
 
