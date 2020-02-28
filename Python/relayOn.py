@@ -46,13 +46,14 @@ import sys
 # Connect the Grove SPDT Relay to digital port D4
 # SIG,NC,VCC,GND
 relay = 3
-grovepi.pinMode(relay,"OUTPUT")
+grovepi.pinMode(relay, "OUTPUT")
 status = grovepi.digitalRead(relay)
+print(status)
 
 while (status == 0):
-  grovepi.digitalWrite(relay, 1)
-  print(status)
-  sys.stdout.flush()
-  status = grovepi.digitalRead(relay)
+    grovepi.digitalWrite(relay, 1)
+    print(status)
+    sys.stdout.flush()
+    status = grovepi.digitalRead(relay)
 else:
-  sys.exit()
+    sys.exit()
