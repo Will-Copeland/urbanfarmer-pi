@@ -47,9 +47,12 @@ import sys
 # SIG,NC,VCC,GND
 relay = 3
 grovepi.pinMode(relay,"OUTPUT")
-
-grovepi.digitalWrite(relay,1)
 status = grovepi.digitalRead(relay)
-print(status)
-sys.stdout.flush()
-sys.exit()
+
+while (status == 0):
+  grovepi.digitalWrite(relay, 1)
+  print(status)
+  sys.stdout.flush()
+  status = grovepi.digitalRead(relay)
+else:
+  sys.exit()
