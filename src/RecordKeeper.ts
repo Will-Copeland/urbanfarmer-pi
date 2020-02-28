@@ -61,7 +61,6 @@ class RecordKeeper implements RecordKeeperProperties {
     }
 
     this.addData(data);
-    this.save();
   }
 
   public async addData(data: TempData) {
@@ -77,6 +76,8 @@ class RecordKeeper implements RecordKeeperProperties {
       .update({
         tempData: firebase.firestore.FieldValue.arrayUnion(data),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        humHighThreshold: this.humHighThreshold,
+        humLowThreshold: this.humLowThreshold,
       })
     } catch (error) {
       console.error("Error saving data to doc ", this.docID);
@@ -196,6 +197,8 @@ class RecordKeeper implements RecordKeeperProperties {
   private _getProperties() {
     return {
       tempData: this.tempData,
+      humHighThreshold: this.humHighThreshold,
+      humLowThreshold: this.humLowThreshold,
     };
   }
 
