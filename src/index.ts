@@ -19,14 +19,12 @@ function main(record: RecordKeeper) {
     };
     record.onData(data);
   })
-
 }
 
 async function run() {
   setInterval(() => { }, 1 << 50);
   await genericNotification("Initializing RecordKeeper", ":globe_with_meridians:");
   const record = await RecordKeeper.init("test");
-  // toggleRelay(0);
   main(record);
 }
 

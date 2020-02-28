@@ -5,6 +5,7 @@ import schedule from "node-schedule";
 import { TempData } from "./models/TempData";
 import genericNotification from "./notifications/genericNotification";
 import toggleRelay from "./toggleRelay";
+import value from "*.json";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
 
@@ -15,6 +16,8 @@ export interface RecordKeeperProperties {
   createdAt: number; // unix
   updatedAt: any; // firestore.FieldValue.serverTimestamp()
   relayPowered: boolean;
+  humLowThreshold: number;
+  humHighThreshold: number;
 }
 
 class RecordKeeper implements RecordKeeperProperties {
@@ -24,9 +27,12 @@ class RecordKeeper implements RecordKeeperProperties {
     await Class._getDoc(collection);
     Class.initSchedule(collection);
     Class.relayPowered = false;
+    toggleRelay(0);
+
+    await Class.save();
     return Class;
-    }
-    
+  }
+
   public docID!: string;
   public collection!: string;
   public recordDate!: string;
@@ -34,45 +40,45 @@ class RecordKeeper implements RecordKeeperProperties {
   public tempData!: TempData[];
   public updatedAt: any;
   public relayPowered!: boolean;
+  public humHighThreshold!: number;
+  public humLowThreshold!: number;
 
 
   public onData(data: TempData) {
-    if (data.humidity > 55 && !this.relayPowered) {
+    if (data.humidity > this.humHighThreshold && !this.relayPowered) {
       console.log("Hum over 55 and relay OFF! Turning on");
       this.relayPowered = true;
       toggleRelay(1)
-    } else if (data.humidity > 55 && this.relayPowered) {
+    } else if (data.humidity > this.humHighThreshold && this.relayPowered) {
       console.log("Hum over 55 and relay ON. doing nothing");
-    } else if (data.humidity < 53 && this.relayPowered) {
+    } else if (data.humidity < this.humLowThreshold && this.relayPowered) {
       console.log("Hum under 53 and relay ON, turning off");
       this.relayPowered = false;
       toggleRelay(0)
-    } else if (data.humidity < 53 && !this.relayPowered) {
+    } else if (data.humidity < this.humLowThreshold && !this.relayPowered) {
       console.log("hum under 53 and relay off, doing nothing");
-      
     }
 
-
-
     this.addData(data);
+    this.save();
   }
 
   public addData(data: TempData) {
     console.log("adding");
-    
+
     return firebase.firestore()
-    .collection(this.collection)
-    .doc(this.docID)
-    .update({
-      tempData: firebase.firestore.FieldValue.arrayUnion(data),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    }).catch(e => {
-      console.error("Error saving data to doc ", this.docID);
-    })
-    .then(() => {
-      console.log("Successfully updated");
-      
-    })
+      .collection(this.collection)
+      .doc(this.docID)
+      .update({
+        tempData: firebase.firestore.FieldValue.arrayUnion(data),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }).catch(e => {
+        console.error("Error saving data to doc ", this.docID);
+      })
+      .then(() => {
+        console.log("Successfully updated");
+
+      })
   }
 
   public async save() {
@@ -85,15 +91,15 @@ class RecordKeeper implements RecordKeeperProperties {
     });
     console.log("Saving data... data: ", noUndefined);
     await firebase.firestore()
-    .collection(this.collection)
-    .doc(this.docID)
-    .update({
-      ...noUndefined,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    }).catch(e => {
-      console.error("Error saving data to doc ", this.docID);
-      
-    })
+      .collection(this.collection)
+      .doc(this.docID)
+      .update({
+        ...noUndefined,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }).catch(e => {
+        console.error("Error saving data to doc ", this.docID);
+
+      })
   }
 
   private async _getDoc(collection: string) {
@@ -124,35 +130,37 @@ class RecordKeeper implements RecordKeeperProperties {
       });
   }
 
-   private async _newDoc(collection: string) {
-     const date = new Date();
-     const data: any = {
+  private async _newDoc(collection: string) {
+    const date = new Date();
+    const data: any = {
       collection,
       createdAt: date.getTime(),
       recordDate: date.toDateString(),
       tempData: [],
       relayPowered: 0,
     };
-     await firebase.firestore()
-    .collection(collection)
-    .add(data)
-    .then(async (doc) => {
-      data.docID = doc.id;
-      await genericNotification("New doc created!", ":new:")
-      this._setProperties(data, collection);
-    })
-    .catch((e) => {
-      console.log("Doc creation failed ", e);
-      return genericNotification("Doc creation failed!", ":rotating_light:");
-    });
+    await firebase.firestore()
+      .collection(collection)
+      .add(data)
+      .then(async (doc) => {
+        data.docID = doc.id;
+        await genericNotification("New doc created!", ":new:")
+        this._setProperties(data, collection);
+      })
+      .catch((e) => {
+        console.log("Doc creation failed ", e);
+        return genericNotification("Doc creation failed!", ":rotating_light:");
+      });
   }
 
-  
 
-  private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {    
+
+  private _setProperties(existingDoc: RecordKeeperProperties, collection: string) {
     this.collection = collection;
     this.docID = existingDoc.docID;
     this.createdAt = existingDoc.createdAt;
+    this.humHighThreshold = existingDoc.humHighThreshold || 54;
+    this.humLowThreshold = existingDoc.humLowThreshold || 44;
   }
 
   private _todaysDate(): string {
@@ -161,7 +169,7 @@ class RecordKeeper implements RecordKeeperProperties {
 
   private _isDocToday(docUnix: number) {
     const docDay = new Date(docUnix).toDateString();
-    
+
     return docDay === this._todaysDate();
   }
 
