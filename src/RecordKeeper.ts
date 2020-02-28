@@ -71,14 +71,14 @@ class RecordKeeper implements RecordKeeperProperties {
     }
     try {
       await firebase.firestore()
-      .collection(this.collection)
-      .doc(this.docID)
-      .update({
-        tempData: firebase.firestore.FieldValue.arrayUnion(data),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        humHighThreshold: this.humHighThreshold,
-        humLowThreshold: this.humLowThreshold,
-      })
+        .collection(this.collection)
+        .doc(this.docID)
+        .update({
+          tempData: firebase.firestore.FieldValue.arrayUnion(data),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          humHighThreshold: this.humHighThreshold,
+          humLowThreshold: this.humLowThreshold,
+        })
     } catch (error) {
       console.error("Error saving data to doc ", this.docID);
       console.error("Err: ", error);
@@ -91,15 +91,19 @@ class RecordKeeper implements RecordKeeperProperties {
       .doc(this.docID)
       .onSnapshot(doc => {
         console.log("onSnapshot running: ", doc.data());
-        const data = doc.data();
+        const data = doc.data() as RecordKeeperProperties;
         if (!doc.exists || !data) {
           return this._newDoc(this.collection)
         }
 
         data.docID = doc.id;
         this._setProperties(data as RecordKeeperProperties, this.collection)
-      })
 
+        if (this.relayPowered !== data.relayPowered) {
+          toggleRelay(data.relayPowered ? 1 : 0);
+          this.relayPowered = data.relayPowered
+        }
+      })
   }
 
   public async save() {
