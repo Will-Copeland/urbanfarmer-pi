@@ -86,15 +86,17 @@ class RecordKeeper implements RecordKeeperProperties {
 
   public subscribeToDoc(collection: string) {
     return firebase.firestore()
-      .collection(this.collection)
+      .collection(collection)
       .doc(this.docID)
       .onSnapshot(doc => {
         console.log("onSnapshot running: ", doc.data());
-
-        if (!doc.exists || !doc.data()) {
+        const data = doc.data();
+        if (!doc.exists || !data) {
           return this._newDoc(this.collection)
         }
-        this._setProperties(doc.data() as RecordKeeperProperties, this.collection)
+
+        data.id = doc.id;
+        this._setProperties(data as RecordKeeperProperties, this.collection)
       })
 
   }
