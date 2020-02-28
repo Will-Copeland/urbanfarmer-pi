@@ -29,7 +29,7 @@ class RecordKeeper implements RecordKeeperProperties {
     Class.initSchedule(collection);
     Class.relayPowered = false;
     toggleRelay(0);
-    Class.unsub = Class.subscribeToDoc();
+    Class.unsub = Class.subscribeToDoc(collection);
     await Class.save();
     return Class;
   }
@@ -84,7 +84,7 @@ class RecordKeeper implements RecordKeeperProperties {
     }
   }
 
-  public subscribeToDoc() {
+  public subscribeToDoc(collection: string) {
     return firebase.firestore()
       .collection(this.collection)
       .doc(this.docID)
