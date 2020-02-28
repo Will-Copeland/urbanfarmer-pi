@@ -64,22 +64,24 @@ class RecordKeeper implements RecordKeeperProperties {
     this.save();
   }
 
-  public addData(data: TempData) {
-    console.log("adding");
+  public async addData(data: TempData) {
+    console.log("adding to: ", this.docID, " ", this.collection);
 
-    return firebase.firestore()
+    if (!this.docID || !this.collection) {
+      console.error("No docID or no collection set! Aborting");
+    }
+    try {
+      await firebase.firestore()
       .collection(this.collection)
       .doc(this.docID)
       .update({
         tempData: firebase.firestore.FieldValue.arrayUnion(data),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }).catch(e => {
-        console.error("Error saving data to doc ", this.docID);
       })
-      .then(() => {
-        console.log("Successfully updated");
-
-      })
+    } catch (error) {
+      console.error("Error saving data to doc ", this.docID);
+      console.error("Err: ", error);
+    }
   }
 
   public subscribeToDoc() {
@@ -87,6 +89,8 @@ class RecordKeeper implements RecordKeeperProperties {
       .collection(this.collection)
       .doc(this.docID)
       .onSnapshot(doc => {
+        console.log("onSnapshot running: ", doc.data());
+
         if (!doc.exists || !doc.data()) {
           return this._newDoc(this.collection)
         }
