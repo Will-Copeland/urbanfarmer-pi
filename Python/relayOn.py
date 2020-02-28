@@ -49,5 +49,7 @@ relay = 3
 grovepi.pinMode(relay,"OUTPUT")
 
 grovepi.digitalWrite(relay,1)
-print("success")
+status = grovepi.digitalRead(relay)
+print(status)
 sys.stdout.flush()
+sys.exit()
