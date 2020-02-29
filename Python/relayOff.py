@@ -49,7 +49,7 @@ relay = 3
 grovepi.pinMode(relay, "OUTPUT")
 status = grovepi.digitalRead(relay)
 
-while (status == 1):
+while status != 0:
     print("Starting loop...")
     grovepi.digitalWrite(relay, 0)
     print(status)
