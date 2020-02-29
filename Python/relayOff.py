@@ -48,14 +48,14 @@ import sys
 relay = 3
 grovepi.pinMode(relay, "OUTPUT")
 status = grovepi.digitalRead(relay)
-
+print("Starting loop...")
 while status != 0:
-    print("Starting loop...")
     grovepi.digitalWrite(relay, 0)
     print(status)
-    sys.stdout.flush()
     status = grovepi.digitalRead(relay)
+    sys.stdout.flush()
 else:
     print("Success")
+    print(status)
     sys.stdout.flush()
     sys.exit()

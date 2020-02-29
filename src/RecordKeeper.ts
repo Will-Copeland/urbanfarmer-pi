@@ -5,7 +5,6 @@ import schedule from "node-schedule";
 import { TempData } from "./models/TempData";
 import genericNotification from "./notifications/genericNotification";
 import toggleRelay from "./toggleRelay";
-import value from "*.json";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
 
@@ -28,7 +27,7 @@ class RecordKeeper implements RecordKeeperProperties {
     await Class._getDoc(collection);
     Class.initSchedule(collection);
     Class.relayPowered = false;
-    toggleRelay(0);
+    await toggleRelay(0);
     Class.unsub = Class.subscribeToDoc(collection);
     await Class.save();
     return Class;
@@ -45,17 +44,17 @@ class RecordKeeper implements RecordKeeperProperties {
   public humLowThreshold!: number;
   public unsub!: () => void;
 
-  public onData(data: TempData) {
+  public async onData(data: TempData) {
     if (data.humidity > this.humHighThreshold && !this.relayPowered) {
       console.log("Hum over 55 and relay OFF! Turning on");
       this.relayPowered = true;
-      toggleRelay(1)
+      await toggleRelay(1)
     } else if (data.humidity > this.humHighThreshold && this.relayPowered) {
       console.log("Hum over 55 and relay ON. doing nothing");
     } else if (data.humidity < this.humLowThreshold && this.relayPowered) {
       console.log("Hum under 53 and relay ON, turning off");
       this.relayPowered = false;
-      toggleRelay(0)
+      await toggleRelay(0)
     } else if (data.humidity < this.humLowThreshold && !this.relayPowered) {
       console.log("hum under 53 and relay off, doing nothing");
     }
@@ -89,7 +88,7 @@ class RecordKeeper implements RecordKeeperProperties {
     return firebase.firestore()
       .collection(collection)
       .doc(this.docID)
-      .onSnapshot(doc => {
+      .onSnapshot(async doc => {
         console.log("onSnapshot running: ", doc.data());
         const data = doc.data() as RecordKeeperProperties;
         if (!doc.exists || !data) {
@@ -100,7 +99,7 @@ class RecordKeeper implements RecordKeeperProperties {
         this._setProperties(data as RecordKeeperProperties, this.collection)
 
         if (this.relayPowered !== data.relayPowered) {
-          toggleRelay(data.relayPowered ? 1 : 0);
+          await toggleRelay(data.relayPowered ? 1 : 0);
           this.relayPowered = data.relayPowered
         }
       })
