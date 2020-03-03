@@ -1,4 +1,3 @@
-// const { spawn } = require("child_process");
 import { spawn } from "child_process";
 
 export default (state: 0 | 1) => {
@@ -7,7 +6,11 @@ export default (state: 0 | 1) => {
   process.stdout.on("data", data => {
     const output = data.toString();
     console.log("node: ", output);
-    process.kill();
-    return;
+  });
+
+  process.stdout.on("close", () => {
+    console.log("process end");
+
   })
+
 }
