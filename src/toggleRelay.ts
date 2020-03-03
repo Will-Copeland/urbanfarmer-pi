@@ -7,10 +7,4 @@ export default (state: 0 | 1) => {
     const output = data.toString();
     console.log("node: ", output);
   });
-
-  process.stdout.on("close", () => {
-    console.log("process end");
-
-  })
-
 }
