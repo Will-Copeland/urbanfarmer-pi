@@ -28,7 +28,7 @@ class RecordKeeper implements RecordKeeperProperties {
     Class.initSchedule(collection);
     Class.relayPowered = false;
     await toggleRelay(0);
-    Class.unsub = Class.subscribeToDoc(collection);
+    Class.unsub = Class.subscribeToDoc(collection, Class.docID);
     await Class.save();
     return Class;
   }
@@ -84,7 +84,7 @@ class RecordKeeper implements RecordKeeperProperties {
     }
   }
 
-  public subscribeToDoc(collection: string) {
+  public subscribeToDoc(collection: string, docId: string) {
     return firebase.firestore()
       .collection(collection)
       .doc(this.docID)
@@ -163,6 +163,7 @@ class RecordKeeper implements RecordKeeperProperties {
       tempData: [],
       relayPowered: 0,
     };
+    await this.unsub();
     await firebase.firestore()
       .collection(collection)
       .add(data)
@@ -170,6 +171,7 @@ class RecordKeeper implements RecordKeeperProperties {
         data.docID = doc.id;
         await genericNotification("New doc created!", ":new:")
         this._setProperties(data, collection);
+        return this.subscribeToDoc(collection, doc.id)
       })
       .catch((e) => {
         console.log("Doc creation failed ", e);
