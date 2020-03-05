@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 import * as firebase from "firebase-admin";
-import schedule from "node-schedule";
 import { TempData } from "./models/TempData";
 import genericNotification from "./notifications/genericNotification";
 import toggleRelay from "./toggleRelay";
@@ -33,7 +32,6 @@ class RecordKeeper implements RecordKeeperProperties {
   public static async init(collection: string) {
     const Class = new RecordKeeper();
     await Class._getDoc(collection);
-    Class.initSchedule(collection);
     Class.relayPowered = false;
     toggleRelay(0);
     Class.unsub = Class.subscribeToDoc(collection, Class.docID);
@@ -174,16 +172,13 @@ class RecordKeeper implements RecordKeeperProperties {
       tempData: [],
       relayPowered: false,
     };
-    if (!!this.unsub) {
-      this.unsub();
-    }
+
     await firebase.firestore()
       .collection(collection)
       .add(data)
       .then((doc) => {
         data.docID = doc.id;
         this._setProperties(data, collection);
-        this.unsub = this.subscribeToDoc(collection, doc.id)
       })
       .catch((e) => {
         console.log("Doc creation failed ", e);
@@ -217,15 +212,6 @@ class RecordKeeper implements RecordKeeperProperties {
       humHighThreshold: this.humHighThreshold,
       humLowThreshold: this.humLowThreshold,
     };
-  }
-
-  private initSchedule(collection: string) {
-    const onNewDay = new schedule.RecurrenceRule();
-    onNewDay.hour = 0;
-    onNewDay.minute = 0;
-    schedule.scheduleJob(onNewDay, () => {
-      this._newDoc(collection);
-    });
   }
 }
 

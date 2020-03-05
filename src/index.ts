@@ -2,6 +2,7 @@ import admin from "firebase-admin";
 import serviceAccount from "../ADMIN_API_KEY.json";
 import { TempData } from "./models/TempData";
 import readTemp from "./readTemp";
+import schedule from "node-schedule";
 import RecordKeeper from "./RecordKeeper";
 
 module.exports = admin.initializeApp({
@@ -20,9 +21,20 @@ function main(record: RecordKeeper) {
 }
 
 async function run() {
-  setInterval(() => { }, 1 << 50);
-  const record = await RecordKeeper.init("test");
+  let record: RecordKeeper;
+  record = await RecordKeeper.init("test");
   main(record);
+
+  const onNewDay = new schedule.RecurrenceRule();
+  onNewDay.hour = 0;
+  onNewDay.minute = 0;
+  schedule.scheduleJob(onNewDay, async () => {
+    if (record.unsub) {
+      record.unsub();
+    }
+    record = await RecordKeeper.init("test")
+    main(record);
+  });
 }
 
 run();
