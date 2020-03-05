@@ -8,6 +8,14 @@ import toggleRelay from "./toggleRelay";
 
 export type DataType = "tempData"; // Add data types as the get used. Next will be "soilMoisture"
 
+export interface RelayEvent {
+  time: number; // unix
+  event: "relayOn" | "relayOff";
+  mostRecentData: {
+    tempData: TempData;
+  }
+}
+
 export interface RecordKeeperProperties {
   docID: string;
   collection: string;
@@ -17,7 +25,7 @@ export interface RecordKeeperProperties {
   relayPowered: boolean;
   humLowThreshold: number;
   humHighThreshold: number;
-  unsub: () => void;
+  unsub?: () => void;
 }
 
 class RecordKeeper implements RecordKeeperProperties {
@@ -27,7 +35,7 @@ class RecordKeeper implements RecordKeeperProperties {
     await Class._getDoc(collection);
     Class.initSchedule(collection);
     Class.relayPowered = false;
-    await toggleRelay(0);
+    toggleRelay(0);
     Class.unsub = Class.subscribeToDoc(collection, Class.docID);
     await Class.save();
     return Class;
@@ -42,19 +50,19 @@ class RecordKeeper implements RecordKeeperProperties {
   public relayPowered!: boolean;
   public humHighThreshold!: number;
   public humLowThreshold!: number;
-  public unsub!: () => void;
+  public unsub: (() => void) | undefined;
 
   public async onData(data: TempData) {
     if (data.humidity > this.humHighThreshold && !this.relayPowered) {
       console.log("Hum over 55 and relay OFF! Turning on");
       this.relayPowered = true;
-      await toggleRelay(1)
+      toggleRelay(1)
     } else if (data.humidity > this.humHighThreshold && this.relayPowered) {
       console.log("Hum over 55 and relay ON. doing nothing");
     } else if (data.humidity < this.humLowThreshold && this.relayPowered) {
       console.log("Hum under 53 and relay ON, turning off");
       this.relayPowered = false;
-      await toggleRelay(0)
+      toggleRelay(0)
     } else if (data.humidity < this.humLowThreshold && !this.relayPowered) {
       console.log("hum under 53 and relay off, doing nothing");
     }
@@ -85,6 +93,9 @@ class RecordKeeper implements RecordKeeperProperties {
   }
 
   public subscribeToDoc(collection: string, docId: string) {
+    if (this.unsub) {
+      this.unsub();
+    }
     return firebase.firestore()
       .collection(collection)
       .doc(this.docID)
@@ -99,7 +110,7 @@ class RecordKeeper implements RecordKeeperProperties {
         this._setProperties(data as RecordKeeperProperties, this.collection)
 
         if (this.relayPowered !== data.relayPowered) {
-          await toggleRelay(data.relayPowered ? 1 : 0);
+          toggleRelay(data.relayPowered ? 1 : 0);
           this.relayPowered = data.relayPowered
         }
       })
@@ -161,17 +172,18 @@ class RecordKeeper implements RecordKeeperProperties {
       createdAt: date.getTime(),
       recordDate: date.toDateString(),
       tempData: [],
-      relayPowered: 0,
+      relayPowered: false,
     };
-    await this.unsub();
+    if (!!this.unsub) {
+      this.unsub();
+    }
     await firebase.firestore()
       .collection(collection)
       .add(data)
-      .then(async (doc) => {
+      .then((doc) => {
         data.docID = doc.id;
-        await genericNotification("New doc created!", ":new:")
         this._setProperties(data, collection);
-        return this.subscribeToDoc(collection, doc.id)
+        this.unsub = this.subscribeToDoc(collection, doc.id)
       })
       .catch((e) => {
         console.log("Doc creation failed ", e);
