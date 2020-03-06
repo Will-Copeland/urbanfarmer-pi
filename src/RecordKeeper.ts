@@ -83,6 +83,7 @@ class RecordKeeper implements RecordKeeperProperties {
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           humHighThreshold: this.humHighThreshold,
           humLowThreshold: this.humLowThreshold,
+          relayPowered: this.relayPowered,
         })
     } catch (error) {
       console.error("Error saving data to doc ", this.docID);
