@@ -5,6 +5,6 @@ export default (state: 0 | 1) => {
   const process = spawn("python", [`../Python/${state === 0 ? "relayOff" : "relayOn"}.py`]);
   process.stdout.on("data", data => {
     const output = data.toString();
-    console.log("node: ", output);
+    console.log("relay set to: ", output);
   });
 }
