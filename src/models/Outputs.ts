@@ -5,7 +5,9 @@ export interface RelayProps {
   ioPort: number;
 }
 
-type StatePromise = 0 | 1 | Promise<0 | 1>
+export type RelayAction = 1 | 0;
+
+type StatePromise = RelayAction | Promise<RelayAction>
 
 export class Relay implements RelayProps {
   constructor({ ioPort }: RelayProps) {
